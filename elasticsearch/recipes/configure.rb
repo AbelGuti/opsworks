@@ -4,7 +4,7 @@ elasticsearch_nodes = []
 search("aws_opsworks_instance", "layer_ids:#{layer_id}").each do |instance|
   elasticsearch_nodes.push(instance['private_ip'])
 end
-master_nodes_quorum = search("aws_opsworks_instance", "layer_ids:#{layer_id}").size / 2) + 1
+master_nodes_quorum = (search("aws_opsworks_instance", "layer_ids:#{layer_id}").size / 2) + 1
 
 template '/etc/elasticsearch/elasticsearch.yml' do
   source 'elasticsearch.yml.erb'
