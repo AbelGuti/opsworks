@@ -20,16 +20,3 @@ end
 package 'elasticsearch' do
   action :install
 end
-
-template '/etc/elasticsearch/elasticsearch.yml' do
-  source 'elasticsearch.yml.erb'
-  owner 'root'
-  group 'elasticsearch'
-  mode '0744'
-  notifies :restart, 'service[elasticsearch]', :delayed
-end
-
-service 'elasticsearch' do
-  supports status: true
-  action [:enable, :start]
-end
