@@ -10,10 +10,10 @@ include_recipe 'apt'
 package 'apt-transport-https'
 
 apt_repository 'elasticsearch' do
-  uri 'https://artifacts.elastic.co/packages/6.x/apt'
+  uri "#{node['elasticsearch']['repo']['url'][node['elasticsearch']['version']]}"
   components ['main']
   distribution 'stable'
-  key 'https://artifacts.elastic.co/GPG-KEY-elasticsearch'
+  key "#{node['elasticsearch']['repo']['gpg'][node['elasticsearch']['version']]}"
   action :add
 end
 
