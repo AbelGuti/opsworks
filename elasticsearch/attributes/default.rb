@@ -10,6 +10,6 @@ default['elasticsearch']['repo']['gpg'] = {
   "6.x" => "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
 }
 
-default['environment'] = development
+default['environment'] = "development"
 default['elasticsearch']['version'] = "2.x"
 default['elasticsearch']['cluster_name'] = "ts-#{node['environment']}"
