@@ -2,12 +2,12 @@
 
 # ---------------------------------- Cluster -----------------------------------
 #
-cluster.name: ts-elasticsearch
+cluster.name: <%= node['elasticsearch']['cluster_name'] %>
 xpack.license.self_generated.type: basic
 #
 # ------------------------------------ Node ------------------------------------
 #
-node.name: node-1
+node.name: <%= @node_name %>
 node.rack_id: <%= @rack_id %>
 #
 # ----------------------------------- Paths ------------------------------------
