@@ -7,6 +7,21 @@
 include_recipe 'java'
 include_recipe 'apt'
 
+%w(* root elasticsearch).each do |user|
+  set_limit user do
+    type 'hard'
+    item 'nofile'
+    value 999999
+    use_system true
+  end
+  set_limit user do
+    type 'soft'
+    item 'nofile'
+    value 999999
+    use_system true
+  end
+end
+
 package 'apt-transport-https'
 
 apt_repository 'elasticsearch' do

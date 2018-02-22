@@ -13,7 +13,8 @@ template '/etc/elasticsearch/elasticsearch.yml' do
   mode '0744'
   variables({
     elasticsearch_nodes: elasticsearch_nodes,
-    master_nodes_quorum: master_nodes_quorum
+    master_nodes_quorum: master_nodes_quorum,
+    rack_id: this_instance["availability_zone"],
   })
   notifies :restart, 'service[elasticsearch]', :delayed
 end
