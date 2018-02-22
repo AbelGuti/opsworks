@@ -35,6 +35,13 @@ end
 package 'elasticsearch' do
   action :install
 end
+
+execute 'chpwn_elasticseach_mount' do
+  command 'chown -R elasticsearch:elasticsearch /var/lib/elasticsearch'
+  action :run
+  only_if { ::Dir.exist?("/var/lib/elasticsearch") }
+end
+
 if node['elasticsearch']['version'] == "2.x" then
   execute 'install_elasticsearch_head' do
     command '/usr/share/elasticsearch/bin/plugin install mobz/elasticsearch-head'
