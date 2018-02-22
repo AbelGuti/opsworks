@@ -279,7 +279,7 @@ elasticsearch_node_name_prefix = graylog-
 # A comma-separated list of Elasticsearch nodes which Graylog is using to connect to the Elasticsearch cluster,
 # see https://www.elastic.co/guide/en/elasticsearch/reference/2.3/modules-discovery-zen.html for details.
 # Default: 127.0.0.1
-elasticsearch_discovery_zen_ping_unicast_hosts = <% @elasticsearch_nodes.each do |elasticsearch_node| -%><%= elasticsearch_node %><%= "," unless elasticsearch_node == @elasticsearch_nodes.last %><% end -%>
+elasticsearch_discovery_zen_ping_unicast_hosts = <% @elasticsearch_nodes.each do |elasticsearch_node| -%><%= elasticsearch_node %>:9300<%= "," unless elasticsearch_node == @elasticsearch_nodes.last %><% end -%>
 
 # Use multiple Elasticsearch nodes as seed
 #elasticsearch_discovery_zen_ping_unicast_hosts = 198.51.100.23:9300, 198.51.100.42:9300
@@ -289,7 +289,7 @@ elasticsearch_node_master = false
 elasticsearch_node_data = false
 
 # use a different port if you run multiple Elasticsearch nodes on one machine
-#elasticsearch_transport_tcp_port = 9350
+elasticsearch_transport_tcp_port = 9300
 
 # we don't need to run the embedded HTTP server here
 #elasticsearch_http_enabled = false
@@ -303,9 +303,9 @@ elasticsearch_node_data = false
 # override them here or in the 'elasticsearch_config_file' if you need to bind to a special address
 # refer to https://www.elastic.co/guide/en/elasticsearch/reference/2.3/modules-network.html
 # for special values here
-#elasticsearch_network_host =
-#elasticsearch_network_bind_host =
-#elasticsearch_network_publish_host =
+elasticsearch_network_host = <%= @my_ip %>
+elasticsearch_network_bind_host = <%= @my_ip %>
+elasticsearch_network_publish_host = <%= @my_ip %>
 
 # The total amount of time discovery will look for other Elasticsearch nodes in the cluster
 # before giving up and declaring the current node master.
