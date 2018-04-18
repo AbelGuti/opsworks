@@ -28,7 +28,64 @@ when 'rhel', 'amazon'
   end
 end
 
-package 'jenkins'
+package [ 'jenkins', 'unzip', 'python-pip' ]
+
+template '/etc/default/jenkins' do
+  source 'jenkins-default.erb'
+  owner 'root'
+  group 'root'
+  mode '0644'
+  notifies :restart, 'service[jenkins]', :delayed
+end
+
+bash 'dsiable_install_wizrd' do
+  user 'jenkins'
+  group 'jenkins'
+  cwd '/var/lib/jenkins'
+  code <<-EOH
+  echo $(dpkg-query -W -f='${Version}' jenkins) > jenkins.install.InstallUtil.lastExecVersion
+  echo $(dpkg-query -W -f='${Version}' jenkins) > jenkins.install.UpgradeWizard.state
+  EOH
+end
+
+template '/var/lib/jenkins/init.groovy' do
+  source 'init.groovy.erb'
+  owner 'root'
+  group 'root'
+  mode '0744'
+  notifies :restart, 'service[jenkins]', :delayed
+end
+
+cookbook_file '/usr/share/jenkins/install-plugins.sh' do
+  source 'install-plugins.sh'
+  mode '0775'
+end
+
+cookbook_file '/usr/local/bin/jenkins-support' do
+  source 'jenkins-support'
+  mode '0775'
+end
+
+cookbook_file '/usr/share/jenkins/plugins.txt' do
+  source 'plugins.txt'
+  mode '0775'
+end
+
+bash 'install_plugins' do
+  cwd '/tmp'
+  code <<-EOH
+  rm -rf /usr/share/jenkins/ref/plugins/*
+  cat /usr/share/jenkins/plugins.txt | /usr/share/jenkins/install-plugins.sh
+  mv /usr/share/jenkins/ref/plugins/* /var/lib/jenkins/plugins/
+  touch /usr/share/jenkins/plugins_installed
+  EOH
+  not_if { ::File.exist?('/usr/share/jenkins/plugins_installed') }
+end
+
+execute 'install_awscli' do
+  command 'pip install -U awscli ecs-deploy'
+  action :run
+end
 
 group 'docker' do
   action :modify

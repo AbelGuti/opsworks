@@ -1,0 +1,16 @@
+#!groovy
+import jenkins.model.*
+import hudson.security.*
+
+def instance = Jenkins.getInstance()
+def jenkins_username = System.getenv('JENKINS_USERNAME') ?: "<%= node['jenkins']['username'] %>"
+def jenkins_password = System.getenv('JENKINS_PASSWORD') ?: "<%= node['jenkins']['password'] %>"
+
+def hudsonRealm = new HudsonPrivateSecurityRealm(false)
+hudsonRealm.createAccount(jenkins_username,jenkins_password)
+instance.setSecurityRealm(hudsonRealm)
+
+def strategy = new FullControlOnceLoggedInAuthorizationStrategy()
+strategy.setAllowAnonymousRead(false)
+instance.setAuthorizationStrategy(strategy)
+instance.save()
